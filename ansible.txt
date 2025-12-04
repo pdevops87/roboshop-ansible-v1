@@ -1,0 +1,159 @@
+ansible:
+========
+Four pillars of any scripting:
+--------------------------------
+1.variable
+2.function
+3.condition
+4.loop
+
+limitations in shell scripting:
+===============================
+1.You must log in to each server manually
+2.No centralized control
+3.No built-in idempotency means script executes line by line and the package is installed or not to check with the exit status.
+to avoid writing line-by-line checks and constant exit-status conditions, we move to Ansible
+
+Centralized Control
+===================
+Meaning: The ability to manage and configure multiple servers from a single control server.
+
+if there is any update in script , we have to login on specific server and run manually.
+tracking the server is also difficult
+ansible is a centralized control to login one server and targets multiple servers and its easy to track the servers and to change the code and run easily.
+
+configuration management software:
+==================================
+ansible is a Configuration tool.
+To run configuration management tasks in Ansible:
+1.Write a playbook describing the desired state of servers
+2.Specify the inventory (servers)
+3.Run ansible-playbook from your control node
+4.Ansible automatically applies the configuration to all targeted servers
+Two approaches:
+===============
+Push model[ansible-playbook]: CM(configuration management) software (like Ansible) pushes configuration from control node → targets.
+Pull model[using Git + CM tool)]: Servers pull playbooks/code from Git and run configuration locally.[ansible-pull -U https://github.com/user/repo.git -i localhost, site.yml[ansible-pull]
+]
+push based is the default in ansible[ansible-playbook]
+ansible-pull -U https://github.com/user/repo.git -i localhost, site.yml
+ansible-pull: always runs on the server where you execute it
+-i localhost, means the playbook is applied to that machine itself, not to other remote servers
+
+*** Puppet need agent software to push configuration code into target servers, to avoid this we can use ansible
+
+1.Ansible = Python program
+2.pip = tool to install Python programs/packages
+3.PyPI = source repository where pip gets Ansible
+
+* first check python version
+* install latest version of python
+* Control Node: Python 3 is required to run Ansible-Core.
+* Managed Nodes: Python 3 is generally needed for Linux/Unix targets (except Windows, which uses WinRM).
+
+ansible --version
+
+two extensions:
+----------------
+1. INI
+2.YAML
+
+inventory.ini:
+==============
+to keep all hosts in one file
+vim list
+1.1.1.1
+1.2.2.2
+1.2.3.3
+
+to run : ansible -i list all --lists-hosts
+here -i is an inventory
+list is a  name
+all means all servers
+--list-hosts: to display all list hosts
+
+modules:
+========
+copy,template,file,....
+tasks:
+======
+A task is a single instruction in a playbook that calls a module.
+Example:
+
+- name: Copy configuration file
+  copy:
+    src: config.conf
+    dest: /etc/config.conf
+
+the task uses the copy module.
+
+what is a playbook?
+collection of play we call it as playbook.
+- hosts: webservers
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+- hosts: dbservers
+  tasks:
+    - name: Install MySQL
+      apt:
+        name: mysql-server
+        state: present
+here two plays : webservers , dbservers
+what is a play?
+A play is a set of tasks that runs on a defined group of hosts.
+what is a tasks?
+A single instruction in a playbook that calls a module.
+collection of modules to run under tasks
+A task uses a module to perform an action.
+- hosts: webservers
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+    - name: Copy config
+      copy:
+        src: nginx.conf
+        dest: /etc/nginx/nginx.conf
+multiple tasks i
+what is a module?
+A unit of work that performs a specific action on a target node.
+copy, template,file,...
+Modules are the actual code executed by Ansible
+
+Playbook → contains one or more Plays
+Play → contains one or more Tasks
+Task → calls a Module
+Module → performs an action (copy, template, file, etc.)
+
+
+Ansible Controller → central machine that runs Ansible and initiates connections.
+Remote Nodes → target machines that receive commands/tasks.
+Connection → SSH or WinRM; no agent required
+
+** Controller Node = Main server that runs Ansible and controls other servers
+
+Adhoc commands:
+===============
+it is a one line ansible commands used to perform tasks without writing a playbook.
+The ping module is used to test connectivity between the Ansible controller and managed nodes.
+ansible controller: control node
+managed nodes: target nodes
+
+uptime Command:
+===============
+Displays how long the system has been running.
+$ uptime
+ 12:30:01 up 5 days,  3:12,  2 users,  load average: 0.15, 0.10, 0.05
+Information it provides:
+-------------------------
+Current time
+How long the system has been up
+Number of users currently logged in
+System load averages for the last 1, 5, and 15 minutes
+
+
