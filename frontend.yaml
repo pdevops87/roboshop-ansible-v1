@@ -1,0 +1,30 @@
+#dnf module disable nginx -y
+#dnf module enable nginx:1.24 -y
+#cp nginx.conf /etc/nginx/nginx.conf
+#dnf install nginx -y
+#rm -rf /usr/share/nginx/html/*
+#curl -o /tmp/frontend.zip https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
+#cd /usr/share/nginx/html
+#unzip /tmp/frontend.zip
+#systemctl enable nginx
+#systemctl restart nginx
+name: frontend application
+hosts: all
+tasks:
+  - name: Install nginx package
+    ansible.builtin.dnf:
+      name: '@nginx:1.24/nginx'
+      state: present
+
+#  copy files to remote locations
+  - name: Copy file with owner and permissions
+    ansible.builtin.copy:
+      src: nginx.conf
+      dest: /etc/nginx/nginx.conf
+
+#   remove application directory
+  - name: Remove application directory
+    ansible.builtin.file:
+      path: /usr/share/nginx/html/
+      state: absent
+

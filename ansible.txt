@@ -1,3 +1,6 @@
+24-12-2025
+===========
+
 ansible:
 ========
 Four pillars of any scripting:
@@ -7,12 +10,16 @@ Four pillars of any scripting:
 3.condition
 4.loop
 
+** Yes, Puppet required agent software on each node.
+** Ansible came into the picture to solve this by using SSH to load and apply configurations without any agent.
+
 limitations in shell scripting:
 ===============================
 1.You must log in to each server manually
 2.No centralized control
 3.No built-in idempotency means script executes line by line and the package is installed or not to check with the exit status.
 to avoid writing line-by-line checks and constant exit-status conditions, we move to Ansible
+
 
 Centralized Control
 ===================
@@ -50,6 +57,7 @@ ansible-pull: always runs on the server where you execute it
 * install latest version of python
 * Control Node: Python 3 is required to run Ansible-Core.
 * Managed Nodes: Python 3 is generally needed for Linux/Unix targets (except Windows, which uses WinRM).
+
 
 ansible --version
 
@@ -156,4 +164,159 @@ How long the system has been up
 Number of users currently logged in
 System load averages for the last 1, 5, and 15 minutes
 
+
+
+
+inventory examples:
+===================
+* ansible -i list all --list-hosts
+* ansible -i list frontend --list-hosts
+* ansible -i frontend001.xyz.com,10.4.1.10, all --list-hosts
+
+SSO means you authenticate once (e.g., with SSH key, Kerberos ticket, or centralized login) and you can access all target nodes without re-entering passwords.
+ansible-playbook -i list all -e ansible-user=ec2-user -e ansible-password=DevOps321
+
+** to check configuration file in a version
+ansible --version
+* enter ---> ansible
+* ansible-config --help
+*
+
+
+ansible-core=engine
+ansible = engine+curated collections
+
+
+
+1. what is configuration?
+Configuration generally refers to setting up a system or environment so that software runs correctly.
+This can include tasks such as:
+
+Installing packages (e.g., installing software dependencies)
+Copying or placing files in required directories
+Cloning or adding repositories
+Starting, enabling, or setting up services
+Editing configuration files (e.g., .conf, .yaml, .env)
+Setting environment variables
+Adjusting permissions or system settings
+
+
+25/12
+====
+yaml rules:
+-----------
+1. yaml uses space not tabs
+name: abc
+age: 20
+
+indentation problem:
+--------------------
+name: abc
+    age: 20 // too many spaces
+2. key:value
+============
+name: abc
+age: 30
+
+3.lists(arrays)
+----------------
+item:
+ - loop1
+ - loop2
+
+4.Inline List
+--------------
+items: [loop1,loop2,loop3]
+
+5.Dictionaries(maps):
+---------------------
+person:
+  name: abc
+  age: 30
+
+6.Inline Map:
+---------------
+person: { name: abc, age:30 }
+
+Multiline Strings:
+------------------
+Block Scalar:
+--------------
+message: |
+   to provide a string in multiple ways
+   this is a blocks scalar
+
+Folded Scalar:
+--------------
+message: >
+   to provide a string in multiple ways
+   this is a folded scalar
+
+ ex:
+ ---
+ test.yaml
+ ---------
+ hosts: all
+ tasks:
+   - ping:
+
+to run yaml file:
+==================
+ansible-playbook -i "hosts", test.yaml -e ansible_user=ec2-user -e ansible_password=DevOps321
+ex:2
+----
+test.yaml
+hosts: all
+tasks:
+  - ping:
+    name: ping module
+  - debug:
+    name: Print message
+      msg: "Hello universe"
+
+** ansible template and ansible playbook both are different
+modules:
+=========
+- name: Copy and unpack archive
+  ansible.builtin.unarchive:
+    src: /local/path/app.tar
+    dest: /remote/destination/
+    remote_src: no
+
+
+| Option            | Meaning                                                                                                 |
+| ----------------- | ------------------------------------------------------------------------------------------------------- |
+| `src`             | Path to the archive (local by default)                                                                  |
+| `dest`            | Directory on remote host to unpack the archive                                                          |
+| `remote_src: no`  | Indicates the archive is local → Ansible copies it first                                                |
+| `remote_src: yes` | Indicates the archive **already exists on the remote host** → Ansible skips copying and just unpacks it |
+
+
+Local machine
+   │
+   │  copy .tar file
+   ▼
+Remote host (temp location)
+   │
+   │  unpack/extract to dest directory
+   ▼
+Remote host (dest directory)
+
+
+How Ansible works step by step?
+
+* Ansible is installed on the Control Node
+* This is where you run your playbooks and commands.
+* Control Node connects to the Target Node
+* Uses SSH for Linux/Unix or WinRM for Windows.
+* Control Node sends Python modules temporarily
+* Ansible copies small Python scripts (modules) to the target node for each task.
+* Target Node executes the modules using its Python interpreter
+* The Python interpreter on the target node runs the module scripts.
+* Tasks like installing packages, copying files, or starting services are performed here.
+* Results are sent back to the Control Node
+* After execution, the module output is returned to the Control Node.
+* Temporary files/modules on the target node are usually removed automatically.
+* Playbook continues to the next task
+* Steps 3–5 are repeated for each task until the playbook finishes.
 
