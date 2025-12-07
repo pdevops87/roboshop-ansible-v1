@@ -8,23 +8,24 @@
 #unzip /tmp/frontend.zip
 #systemctl enable nginx
 #systemctl restart nginx
-name: frontend application
-hosts: all
-tasks:
-  - name: Install nginx package
-    ansible.builtin.dnf:
-      name: '@nginx:1.24/nginx'
-      state: present
+
+- name: frontend application
+  hosts: all
+  tasks:
+    - name: Install nginx package
+      ansible.builtin.dnf:
+        name: '@nginx:1.24/nginx'
+        state: present
 
 #  copy files to remote locations
-  - name: Copy file with owner and permissions
-    ansible.builtin.copy:
-      src: nginx.conf
-      dest: /etc/nginx/nginx.conf
+    - name: Copy file with owner and permissions
+      ansible.builtin.copy:
+        src: nginx.conf
+        dest: /etc/nginx/nginx.conf
 
 #   remove application directory
-  - name: Remove application directory
-    ansible.builtin.file:
-      path: /usr/share/nginx/html/
-      state: absent
+    - name: Remove application directory
+      ansible.builtin.file:
+        path: /usr/share/nginx/html/
+        state: absent
 
