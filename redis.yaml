@@ -1,0 +1,8 @@
+- name: redis cache memory
+  hosts: all
+  become: true
+  tasks:
+   - name: Install nodejs package
+     ansible.builtin.dnf:
+       name: '@redis:7'
+       state: present

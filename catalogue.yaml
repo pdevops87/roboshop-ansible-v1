@@ -52,20 +52,6 @@
         name: 'mongodb-mongosh'
         state: present
 
-#        first copy the schema data from
-#    - name: Copy JS schema to remote
-#      copy:
-#        src: master-data.js
-#        dest: /app/db/master-data.js
-#
-#    - name: Insert schema into MongoDB
-#      community.mongodb.mongodb_shell:
-#        login_host: "mongodb-dev.pdevops78.online"
-#        login_port: 27017
-#        db: "mongosh "
-#        script_file: "/path/to/master-data.js"
-
-
     - name: Load schema
       ansible.builtin.shell: mongosh --host mongodb-dev.pdevops78.online </app/db/master-data.js
 
