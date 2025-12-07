@@ -12,7 +12,7 @@
         src: mongo.repo
         dest: /etc/yum.repos.d/mongo.repo
 
-    - name: Install nginx package
+    - name: Install nodejs package
       ansible.builtin.dnf:
         name: '@nodejs:20'
         state: present
@@ -52,10 +52,16 @@
         name: 'mongodb-mongosh'
         state: present
 
+#        first copy the schema data from
+    - name: Copy JS schema to remote
+      copy:
+        src: master-data.js
+        dest: /app/db/master-data.js
+
     - name: Insert schema into MongoDB
       community.mongodb.mongodb_shell:
         login_host: "mongodb-dev.pdevops78.online"
         login_port: 27017
-        db: "master-data"
+        db: "mongosh "
         script_file: "/path/to/master-data.js"
 
