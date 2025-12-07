@@ -12,7 +12,7 @@
 #systemctl enable mongod &>>/tmp/roboshop.log
 #systemctl restart mongod &>>/tmp/roboshop.log
 
-- name: mongodb
+- name: mongo
   hosts: all
   become: true
   tasks:
