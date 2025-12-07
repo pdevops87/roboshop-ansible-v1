@@ -42,11 +42,10 @@
       args:
         chdir: /app
 
-    - name: Copy shipping jar
-      ansible.builtin.copy:
-        src: target/shipping-1.0.jar
-        dest: shipping.jar
-        remote_src: yes
+    - name: move
+      ansible.builtin.shell: mv target/shipping-1.0.jar shipping.jar
+      args:
+        chdir: /app
 
     - name: install mysql
       ansible.builtin.dnf:
