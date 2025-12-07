@@ -38,12 +38,25 @@
         remote_src: yes
 
     - name: mvn clean package
-      ansible.builtin.dnf:
-        name: mvn clean
-        state: present
+      ansible.builtin.shell: mvn clean
 
     - name: Create two hard links
       ansible.builtin.file:
         src: target/shipping-1.0.jar
         dest: shipping.jar
         state: touch
+
+    - name: install mysql
+      ansible.builtin.dnf:
+        name: mysql
+        state: present
+
+    - name: load schema
+      community.mysql.mysql_db:
+        login_user: root
+        login_password: RoboShop@1
+        login_host: mysql-dev.pdevops87.online
+        login_port: 3306
+        name: all
+        target: /app/db/schema.sql
+        state: present
