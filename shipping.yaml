@@ -39,12 +39,14 @@
 
     - name: mvn clean package
       ansible.builtin.shell: mvn clean
+      args:
+        chdir: /app
 
-    - name: Create two hard links
-      ansible.builtin.file:
+    - name: Copy shipping jar
+      ansible.builtin.copy:
         src: target/shipping-1.0.jar
         dest: shipping.jar
-        state: touch
+        remote_src: yes
 
     - name: install mysql
       ansible.builtin.dnf:
@@ -60,3 +62,5 @@
         name: all
         target: /app/db/schema.sql
         state: present
+
+
