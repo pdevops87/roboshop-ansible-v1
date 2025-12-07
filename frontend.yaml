@@ -15,7 +15,7 @@
   tasks:
     - name: Install nginx package
       ansible.builtin.dnf:
-        name: '@nginx:1.24/nginx'
+        name: '@nginx:1.24'
         state: present
 
 #  copy files to remote locations
