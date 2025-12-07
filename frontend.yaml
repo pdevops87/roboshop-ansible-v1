@@ -19,7 +19,7 @@
         state: present
 
 #  copy files to remote locations
-    - name: Copy file with owner and permissions
+    - name: Copy nginx.conf file
       ansible.builtin.copy:
         src: nginx.conf
         dest: /etc/nginx/nginx.conf
