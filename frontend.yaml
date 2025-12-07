@@ -45,3 +45,9 @@
         src: /tmp/frontend.zip
         dest: /usr/share/nginx/html
 
+    - name: start nginx service
+      ansible.builtin.systemd_service:
+        name: nginx
+        state: started
+        enabled: true
+
