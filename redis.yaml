@@ -13,7 +13,7 @@
        regexp: 'protected-mode yes'
        replace: 'protected-mode no'
 
-   - name: Replace old bind address with new address
+   - name: Install Redis Listen address
      ansible.builtin.replace:
        path: /etc/redis/redis.conf
        regexp: '127.0.0.1'
