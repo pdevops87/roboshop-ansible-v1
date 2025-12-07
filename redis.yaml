@@ -2,7 +2,13 @@
   hosts: all
   become: true
   tasks:
-   - name: Install nodejs package
+   - name: Install redis package
      ansible.builtin.dnf:
        name: '@redis:7'
        state: present
+
+   - name: Replace old text with new text
+     ansible.builtin.replace:
+       path: /etc/mongod.conf
+       regexp: 'protected-mode yes'
+       replace: 'protected-mode no'
