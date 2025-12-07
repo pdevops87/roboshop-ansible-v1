@@ -36,7 +36,7 @@
         url: https://roboshop-artifacts.s3.amazonaws.com/catalogue-v3.zip
         dest: /tmp/catalogue.zip
 
-    - name: Extract frontend application
+    - name: Extract catalogue
       ansible.builtin.unarchive:
         src: /tmp/catalogue.zip
         dest: /app
@@ -51,4 +51,11 @@
       ansible.builtin.dnf:
         name: 'mongodb-mongosh'
         state: present
+
+    - name: Insert schema into MongoDB
+      community.mongodb.mongodb_shell:
+        login_host: "mongodb-dev.pdevops78.online"
+        login_port: 27017
+        db: "master-data"
+        script_file: "/path/to/master-data.js"
 
