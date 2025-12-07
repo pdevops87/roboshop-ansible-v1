@@ -23,7 +23,7 @@
 
     - name: Install mongodb
       ansible.builtin.dnf:
-        name: 'mongodb-org'
+        name: mongodb-org
         state: present
 
     - name: Replace old address with new address
