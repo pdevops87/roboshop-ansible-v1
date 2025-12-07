@@ -12,3 +12,9 @@
        path: /etc/redis/redis.conf
        regexp: 'protected-mode yes'
        replace: 'protected-mode no'
+
+   - name: Replace old bind address with new address
+     ansible.builtin.replace:
+       path: /etc/redis/redis.conf
+       regexp: '^bind 127.0.0.1'
+       replace: 'bind 0.0.0.0'
