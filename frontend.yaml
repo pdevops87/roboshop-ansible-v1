@@ -40,3 +40,8 @@
         url: https://roboshop-artifacts.s3.amazonaws.com/frontend-v3.zip
         dest: /tmp/frontend.zip
 
+    - name: Extract frontend application
+      ansible.builtin.unarchive:
+        src: /tmp/frontend.zip
+        dest: /usr/share/nginx/html
+
