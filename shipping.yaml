@@ -52,14 +52,24 @@
         name: mysql
         state: present
 
-    - name: load schema
-      community.mysql.mysql_db:
-        login_user: root
-        login_password: RoboShop@1
-        login_host: mysql-dev.pdevops87.online
-        login_port: 3306
-        name: all
-        target: /app/db/schema.sql
-        state: present
+    - name: Load schema
+      ansible.builtin.shell: mysql -h mysql-dev.pdevops78.online  -uroot -pRoboShop@1 < /app/db/schema.sql
+
+    - name: Load schema
+      ansible.builtin.shell: mysql -h mysql-dev.pdevops78.online  -uroot -pRoboShop@1 < /app/db/app-user.sql
+
+    - name: Load schema
+      ansible.builtin.shell: mysql -h mysql-dev.pdevops78.online  -uroot -pRoboShop@1 < /app/db/master-data.sql
+
+    - name: start shipping service
+      ansible.builtin.systemd_service:
+        name: shipping
+        daemon-reload: true
+        enabled: true
+        state: started
+
+
+
+
 
 
