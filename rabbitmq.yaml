@@ -14,7 +14,7 @@
 
     - name: start rabbitmq service
       ansible.builtin.systemd_service:
-        name: rabbitmq
+        name: rabbitmq-server
         state: started
         enabled: true
 
