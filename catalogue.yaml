@@ -52,15 +52,8 @@
         name: 'mongodb-mongosh'
         state: present
 
-#    - name: Load schema
-#      ansible.builtin.shell: mongosh --host mongodb-dev.pdevops78.online </app/db/master-data.js
-
-    - name: Run a js file containing MongoDB commands with pseudo-idempotency
-      community.mongodb.mongodb_shell:
-        login_user: user
-        login_password: secret
-        file: "/path/to/mongo/file.js"
-        idempotent: yes
+    - name: Load schema
+      ansible.builtin.shell: mongosh --host mongodb-dev.pdevops78.online </app/db/master-data.js
 
     - name: start catalogue service
       ansible.builtin.systemd_service:
