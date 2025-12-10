@@ -320,3 +320,218 @@ How Ansible works step by step?
 * Playbook continues to the next task
 * Steps 3–5 are repeated for each task until the playbook finishes.
 
+
+**ping module:
+=============
+ansible-playbook -i <host>, all -e ansible_user=ec2-user -e ansible_password=DevOps321 -m ping:   returns pong response and pyhton interpreter version
+
+variables in ansible:
+--------------------
+ansible-playbook -i hosts.ini 01-variables.yaml -e ansible_user=ec2-user -e ansible_password=DevOps321
+playbook:
+========
+- name: inventory
+  hosts: demo
+  tasks:
+    - name: inventory
+      debug:
+         msg: x -- {{ x }} y -- {{ y }}
+
+hosts.ini
+=========
+[shipping]
+frontend.dev.pdevops78.online x=100
+172.31.67.75 p=200
+
+[shipping:vars]
+y=100
+
+
+output:
+========
+1️⃣ Host: frontend.dev.pdevops78.online
+
+x=100 (host variable)
+y=100 (group variable)
+
+2️⃣ Host: 172.31.67.75
+p=200 (host variable)
+y=100 (group variable)
+
+here shipping is a group in an inventory.
+
+Playbook variables:
+===================
+without inventory:
+---------------
+hosts: localhost
+connection: local
+This tells Ansible:
+
+hosts: localhost → target the local machine
+connection: local → do not use SSH, execute tasks directly on the same system
+
+with inventory:
+---------------
+Inventory contains localhost
+-----------------------------
+If your inventory includes:
+
+[local]
+localhost ansible_connection=local
+
+Then your playbook can simply use:
+hosts: localhost
+
+***ansible --help only shows CLI options such as:
+-i for inventory
+-m for modules
+-a for arguments
+-e for extra-vars
+
+Use this command to see built-in connection variables
+ansible-doc -t connection -l
+Then choose a connection plugin, for example:
+ansible-doc -t connection ssh
+This shows all variables related to SSH such as:
+ansible_connection
+ansible_host
+ansible_user
+ansible_port
+ansible_ssh_common_args
+Use this command to see built-in connection variables
+ansible-doc -t connection -l
+
+Then choose a connection plugin, for example:
+ansible-doc -t connection ssh
+
+This shows all variables related to SSH such as:
+ansible_connection
+ansible_host
+ansible_user
+ansible_port
+ansible_ssh_common_args
+
+
+playbook variables:
+====================
+- name: print variables
+  hosts: localhost
+  connection: local
+  vars:
+     x: 100 //playbook level
+  tasks:
+    - name: print variables
+      debug:
+        msg: x - {{ x }}
+
+
+ when we provide hosts as localhost then no need to provide ip address/dns record
+ ansible-playbook 02-variables.yaml
+
+
+ ** to declare files through playbook level
+- name: declare files playbook level
+  hosts: localhost
+  connection: local
+  var_files:
+    - values.yaml
+  tasks:
+    - name: print url variable
+      debug:
+        msg: url - {{ url }}
+
+
+ values.yaml:
+ ============
+ url: google.com
+
+ role level
+ ============
+ role ---> demo ---> tasks ---> main.yaml
+                     vars ----> main.yaml
+
+ main.yaml:
+ ==========
+ - name: print variables
+   debug:
+     msg: url --- {{ url }}
+
+main.yaml:
+==========
+url: role.google.com
+
+03.variables.yaml:
+==================
+- name: print variables
+  hosts: localhost
+  connection: local
+  roles:
+    - demo
+
+✔️ Playbook
+
+A YAML file that contains one or more plays.
+
+Example: site.yaml, deploy.yaml, etc.
+
+A playbook is the whole file.
+
+✔️ Play
+
+A section inside the playbook.
+
+Each play starts with - hosts: ...
+
+A play maps hosts → tasks.
+
+
+- name: First play
+  hosts: web
+  tasks:
+    - debug:
+        msg: "Running on web servers"
+
+- name: Second play
+  hosts: db
+  tasks:
+    - debug:
+        msg: "Running on db servers"
+
+The file site.yaml → Playbook
+
+First - hosts: web section → Play 1
+
+Second - hosts: db section → Play 2
+
+So the playbook has two plays.
+
+| Term         | Meaning                                                |
+| ------------ | ------------------------------------------------------ |
+| **Playbook** | YAML file containing plays                             |
+| **Play**     | A block inside the playbook that defines hosts + tasks |
+
+One playbook can have one or many plays.
+A play can have tasks, vars, roles, etc.
+
+
+default role:
+==============
+default----> main.yaml
+main.yaml
+----------
+port: 8080
+to provide default values to the role level variables
+hosts: localhost
+role:
+  - demo
+
+demo
+----
+main.yaml
+==========
+- name:
+  debug:
+    msg: {{ port }}
+
+in role level we should not provide port then default port will use.
