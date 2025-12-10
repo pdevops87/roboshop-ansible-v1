@@ -38,7 +38,7 @@
         remote_src: yes
 
     - name: mvn clean package
-      ansible.builtin.shell: mvn clean
+      ansible.builtin.shell: mvn clean package
       args:
         chdir: /app
 
